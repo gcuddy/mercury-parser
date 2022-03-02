@@ -4,14 +4,8 @@ import cheerio from 'cheerio';
 
 let urls = [
   {
-    url: 'http://www.cnn.com/2016/11/05/middleeast/iraq-mosul-isis-offensive/',
-    title: 'Iraqi troops storm town south of Mosul',
-  },
-  {
-    url:
-      'https://www.cnn.com/2019/01/30/politics/trump-intel-chiefs-foreign-policy-iran-isis-north-korea/index.html',
-    title:
-      'Trump chastises intel chiefs after they contradict him on Iran and claims of foreign policy success',
+    url: 'https://adamtooze.substack.com/p/chartbook-90-heavy-fires',
+    title: 'Chartbook #90: Heavy Fires',
   },
 ];
 
