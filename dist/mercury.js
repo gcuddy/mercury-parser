@@ -5833,6 +5833,13 @@ var SubstackExtractor = {
             src = _JSON$parse.src;
 
         $node.attr('src', src);
+      },
+
+      /**
+       * @param {HTMLVideoElement} $node
+       */
+      video: function video($node) {
+        $node.controls = true;
       }
     },
     defaultCleaner: false,

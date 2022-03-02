@@ -21,6 +21,12 @@ export const SubstackExtractor = {
         const { src } = JSON.parse($node.attr('data-attrs'));
         $node.attr('src', src);
       },
+      /**
+       * @param {HTMLVideoElement} $node
+       */
+      video: $node => {
+        $node.controls = true;
+      },
     },
     defaultCleaner: false,
     clean: ['.subscribe-widget'],
