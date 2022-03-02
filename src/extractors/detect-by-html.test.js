@@ -11,6 +11,14 @@ describe('detectByHtml', () => {
 
     assert.equal(detectByHtml($).domain, 'medium.com');
   });
+  it('detects a substack post from the html', () => {
+    const html =
+      '<head><link rel="stylesheet" href="https://cdn.substack.com/theme/main.css?v=aa21bbcff68385f8feade7fdfbfe2173"></head>';
+
+    const $ = cheerio.load(html);
+
+    assert.equal(detectByHtml($).domain, 'substack.com');
+  });
 
   it('returns nothing if no match is found', () => {
     const html = '<div></div>';
