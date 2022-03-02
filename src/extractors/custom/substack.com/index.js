@@ -14,7 +14,7 @@ export const SubstackExtractor = {
   },
 
   content: {
-    selectors: ['article.post'],
+    selectors: ['div.available-content'],
 
     transforms: {
       'img[data-attrs]': $node => {
@@ -22,6 +22,8 @@ export const SubstackExtractor = {
         $node.attr('src', src);
       },
     },
+    defaultCleaner: false,
+    clean: ['.subscribe-widget'],
   },
 
   lead_image_url: {

@@ -5826,7 +5826,7 @@ var SubstackExtractor = {
     selectors: [['.post-meta-item.post-date time[datetime]', 'datetime']]
   },
   content: {
-    selectors: ['article.post'],
+    selectors: ['div.available-content'],
     transforms: {
       'img[data-attrs]': function imgDataAttrs($node) {
         var _JSON$parse = JSON.parse($node.attr('data-attrs')),
@@ -5834,7 +5834,9 @@ var SubstackExtractor = {
 
         $node.attr('src', src);
       }
-    }
+    },
+    defaultCleaner: false,
+    clean: ['.subscribe-widget']
   },
   lead_image_url: {
     selectors: [['meta[name="og:image"]', 'value'], ['meta[property="og:image"]', 'content']]
