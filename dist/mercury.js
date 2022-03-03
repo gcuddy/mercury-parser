@@ -1212,11 +1212,11 @@ function cleanHeaders($article, $) {
     // document. This probably means that it was part of the title, a
     // subtitle or something else extraneous like a datestamp or byline,
     // all of which should be handled by other metadata handling.
-
-    if ($($header, $article).prevAll('p').length === 0) {
-      return $header.remove();
-    } // Remove any headers that match the title exactly.
-
+    // TODO: commenting this out because it was causing problems. look for better solution
+    // if ($($header, $article).prevAll('p').length === 0) {
+    //   return $header.remove();
+    // }
+    // Remove any headers that match the title exactly.
 
     if (normalizeSpaces($(header).text()) === title) {
       return $header.remove();
@@ -5853,6 +5853,64 @@ var SubstackExtractor = {
   excerpt: null
 };
 
+var WwwTheinfatuationComExtractor = {
+  domain: 'www.theinfatuation.com',
+  title: {
+    selectors: [// enter title selectors
+    ['meta[name="og:title"]', 'value'], 'title']
+  },
+  author: {
+    selectors: [// enter author selectors
+    ['meta[name="author"]', 'value'], ['meta[name="og:author"]', 'value'], "div[class*='byLine'] p[class*='contributorsList'] span[class*='contributorName']"]
+  },
+  date_published: {
+    selectors: [// enter selectors
+    ['meta[name="article:published_time"]', 'value']]
+  },
+  dek: {
+    selectors: [// enter selectors
+    ['meta[name="og:description"]', 'value'], ['meta[name="description"]', 'value'], ['meta[name="twitter:description"]', 'value']]
+  },
+  lead_image_url: {
+    selectors: [// enter selectors
+    ['meta[name="og:image"]', 'value'], ['meta[name="twitter:image"]', 'value'], ['meta[name="twitter:image:src"]', 'value']]
+  },
+  content: {
+    selectors: [// enter content selectors
+    ['div[class*="_richText_"]']],
+    // Is there anything in the content you selected that needs transformed
+    // before it's consumable content? E.g., unusual lazy loaded images
+    transforms: {
+      // turn noscript into figure
+      noscript: function noscript($node, $) {
+        var $children = $.browser ? $($node.text()) : $node.children();
+
+        if ($children.length === 1 && $children.get(0) !== undefined && $children.get(0).tagName.toLowerCase() === 'img') {
+          return 'figure';
+        }
+
+        return null;
+      }
+    },
+    defaultCleaner: false,
+    // Is there anything that is in the result that shouldn't be?
+    // The clean selectors will remove anything that matches from
+    // the result
+    clean: ["img[src^='position:absolute']", "p[class*='photoCreds']"]
+  },
+  extend: {
+    score: {
+      selectors: ['h2 div', "div[class*='rating']"]
+    },
+    'perfect for': {
+      selectors: []
+    },
+    website: {
+      selectors: [["div[class*='venueContainer'] p[class*='infoText'] a:not([href*='google.com/maps'])", 'href']]
+    }
+  }
+};
+
 
 
 var CustomExtractors = /*#__PURE__*/Object.freeze({
@@ -5992,7 +6050,8 @@ var CustomExtractors = /*#__PURE__*/Object.freeze({
   EpaperZeitDeExtractor: EpaperZeitDeExtractor,
   WwwLadbibleComExtractor: WwwLadbibleComExtractor,
   TimesofindiaIndiatimesComExtractor: TimesofindiaIndiatimesComExtractor,
-  SubstackExtractor: SubstackExtractor
+  SubstackExtractor: SubstackExtractor,
+  WwwTheinfatuationComExtractor: WwwTheinfatuationComExtractor
 });
 
 var Extractors = _Object$keys(CustomExtractors).reduce(function (acc, key) {
