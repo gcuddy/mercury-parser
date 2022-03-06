@@ -18,8 +18,11 @@ export const SubstackExtractor = {
 
     transforms: {
       'img[data-attrs]': $node => {
-        const { src } = JSON.parse($node.attr('data-attrs'));
-        $node.attr('src', src);
+        const { src, type } = JSON.parse($node.attr('data-attrs'));
+        if (type === 'image/heic') {
+          return $node;
+        }
+        return $node.attr('src', src);
       },
       /**
        * @param {HTMLVideoElement} $node
