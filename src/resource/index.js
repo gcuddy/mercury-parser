@@ -3,7 +3,7 @@ import iconv from 'iconv-lite';
 
 import { getEncoding } from 'utils/text';
 import { fetchResource } from './utils';
-import { normalizeMetaTags, convertLazyLoadedImages, clean } from './utils/dom';
+import { normalizeMetaTags, convertLazyLoadedImages } from './utils/dom';
 
 const Resource = {
   // Create a Resource.
@@ -56,7 +56,9 @@ const Resource = {
 
     $ = normalizeMetaTags($);
     $ = convertLazyLoadedImages($);
-    $ = clean($);
+
+    // commenting this out - it's not needed and it's causing problems, especially with cleaning out the schema.org tags
+    //   $ = clean($);
 
     return $;
   },

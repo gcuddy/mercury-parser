@@ -136,3 +136,5 @@ export * from './www.ladbible.com';
 export * from './timesofindia.indiatimes.com';
 export * from './substack.com';
 export * from './www.theinfatuation.com';
+export * from './aeon.co';
+export * from './www.seriouseats.com';

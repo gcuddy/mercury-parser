@@ -1532,7 +1532,6 @@ var IS_LINK = new RegExp('https?://', 'i');
 var IMAGE_RE = '.(png|gif|jpe?g)';
 var IS_IMAGE = new RegExp("".concat(IMAGE_RE), 'i');
 var IS_SRCSET = new RegExp("".concat(IMAGE_RE, "(\\?\\S+)?(\\s*[\\d.]+[wx])"), 'i');
-var TAGS_TO_REMOVE = ['script', 'style', 'form'].join(',');
 
 // lazy loaded images into normal images.
 // Many sites will have img tags with no source, or an image tag with a src
@@ -1553,21 +1552,6 @@ function convertLazyLoadedImages($) {
       }
     });
   });
-  return $;
-}
-
-function isComment(index, node) {
-  return node.type === 'comment';
-}
-
-function cleanComments($) {
-  $.root().find('*').contents().filter(isComment).remove();
-  return $;
-}
-
-function clean($) {
-  $(TAGS_TO_REMOVE).remove();
-  $ = cleanComments($);
   return $;
 }
 
@@ -1667,8 +1651,9 @@ var Resource = {
     }
 
     $ = normalizeMetaTags($);
-    $ = convertLazyLoadedImages($);
-    $ = clean($);
+    $ = convertLazyLoadedImages($); // commenting this out - it's not needed and it's causing problems, especially with cleaning out the schema.org tags
+    //   $ = clean($);
+
     return $;
   },
   encodeDoc: function encodeDoc(_ref2) {
@@ -5830,9 +5815,14 @@ var SubstackExtractor = {
     transforms: {
       'img[data-attrs]': function imgDataAttrs($node) {
         var _JSON$parse = JSON.parse($node.attr('data-attrs')),
-            src = _JSON$parse.src;
+            src = _JSON$parse.src,
+            type = _JSON$parse.type;
 
-        $node.attr('src', src);
+        if (type === 'image/heic') {
+          return $node;
+        }
+
+        return $node.attr('src', src);
       },
 
       /**
@@ -5908,6 +5898,76 @@ var WwwTheinfatuationComExtractor = {
     website: {
       selectors: [["div[class*='venueContainer'] p[class*='infoText'] a:not([href*='google.com/maps'])", 'href']]
     }
+  }
+};
+
+var AeonCoExtractor = {
+  domain: 'aeon.co',
+  title: {
+    selectors: [// enter title selectors
+    ]
+  },
+  author: {
+    selectors: [// enter author selectors
+    ]
+  },
+  date_published: {
+    selectors: [// enter selectors
+    ]
+  },
+  dek: {
+    selectors: [// enter selectors
+    ]
+  },
+  lead_image_url: {
+    selectors: [// enter selectors
+    ]
+  },
+  content: {
+    selectors: [// enter content selectors
+    ],
+    // Is there anything in the content you selected that needs transformed
+    // before it's consumable content? E.g., unusual lazy loaded images
+    transforms: {},
+    // Is there anything that is in the result that shouldn't be?
+    // The clean selectors will remove anything that matches from
+    // the result
+    clean: []
+  }
+};
+
+var WwwSeriouseatsComExtractor = {
+  domain: 'www.seriouseats.com',
+  title: {
+    selectors: [// enter title selectors
+    'h1.heading__title']
+  },
+  author: {
+    selectors: [// enter author selectors
+    "div[class*='bylines'] a"]
+  },
+  date_published: {
+    selectors: [// enter selectors
+    ]
+  },
+  dek: {
+    selectors: [// enter selectors
+    ]
+  },
+  lead_image_url: {
+    selectors: [// enter selectors
+    ]
+  },
+  content: {
+    selectors: [// enter content selectors
+    'article-content'],
+    // Is there anything in the content you selected that needs transformed
+    // before it's consumable content? E.g., unusual lazy loaded images
+    transforms: {},
+    // Is there anything that is in the result that shouldn't be?
+    // The clean selectors will remove anything that matches from
+    // the result
+    clean: []
   }
 };
 
@@ -6051,7 +6111,9 @@ var CustomExtractors = /*#__PURE__*/Object.freeze({
   WwwLadbibleComExtractor: WwwLadbibleComExtractor,
   TimesofindiaIndiatimesComExtractor: TimesofindiaIndiatimesComExtractor,
   SubstackExtractor: SubstackExtractor,
-  WwwTheinfatuationComExtractor: WwwTheinfatuationComExtractor
+  WwwTheinfatuationComExtractor: WwwTheinfatuationComExtractor,
+  AeonCoExtractor: AeonCoExtractor,
+  WwwSeriouseatsComExtractor: WwwSeriouseatsComExtractor
 });
 
 var Extractors = _Object$keys(CustomExtractors).reduce(function (acc, key) {
