@@ -12,6 +12,7 @@ export const KEEP_SELECTORS = [
   'iframe[src^="https://player.vimeo"]',
   'iframe[src^="http://player.vimeo"]',
   'iframe[src^="https://www.redditmedia.com"]',
+  'script[type="application/ld+json"]',
 ];
 
 // A list of tags to strip from the output if we encounter them.

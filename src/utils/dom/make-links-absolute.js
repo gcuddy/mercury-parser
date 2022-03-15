@@ -5,7 +5,7 @@ import { getAttrs, setAttr } from 'utils/dom';
 function absolutize($, rootUrl, attr) {
   const baseUrl = $('base').attr('href');
 
-  $(`[${attr}]`).each((_, node) => {
+  $(`[${attr}]:not([class*="footnote"])`).each((_, node) => {
     const attrs = getAttrs(node);
     const url = attrs[attr];
     if (!url) return;
