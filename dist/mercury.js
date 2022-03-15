@@ -360,7 +360,7 @@ var SPACER_RE = new RegExp('transparent|spacer|blank', 'i'); // The class we wil
 // but would normally remove
 
 var KEEP_CLASS = 'mercury-parser-keep';
-var KEEP_SELECTORS = ['iframe[src^="https://www.youtube.com"]', 'iframe[src^="https://www.youtube-nocookie.com"]', 'iframe[src^="http://www.youtube.com"]', 'iframe[src^="https://player.vimeo"]', 'iframe[src^="http://player.vimeo"]', 'iframe[src^="https://www.redditmedia.com"]']; // A list of tags to strip from the output if we encounter them.
+var KEEP_SELECTORS = ['iframe[src^="https://www.youtube.com"]', 'iframe[src^="https://www.youtube-nocookie.com"]', 'iframe[src^="http://www.youtube.com"]', 'iframe[src^="https://player.vimeo"]', 'iframe[src^="http://player.vimeo"]', 'iframe[src^="https://www.redditmedia.com"]', 'script[type="application/ld+json"]']; // A list of tags to strip from the output if we encounter them.
 
 var STRIP_OUTPUT_TAGS = ['title', 'script', 'noscript', 'link', 'style', 'hr', 'embed', 'iframe', 'object']; // cleanAttributes
 var WHITELIST_ATTRS = ['src', 'srcset', 'sizes', 'type', 'href', 'class', 'id', 'alt', 'xlink:href', 'width', 'height'];
@@ -1246,7 +1246,7 @@ function rewriteTopLevel$$1(article, $) {
 
 function absolutize($, rootUrl, attr) {
   var baseUrl = $('base').attr('href');
-  $("[".concat(attr, "]")).each(function (_, node) {
+  $("[".concat(attr, "]:not([class*=\"footnote\"])")).each(function (_, node) {
     var attrs = getAttrs(node);
     var url = attrs[attr];
     if (!url) return;
@@ -5971,6 +5971,41 @@ var WwwSeriouseatsComExtractor = {
   }
 };
 
+var WwwVultureComExtractor = {
+  domain: 'www.vulture.com',
+  title: {
+    selectors: [// enter title selectors
+    ]
+  },
+  author: {
+    selectors: [// enter author selectors
+    ]
+  },
+  date_published: {
+    selectors: [// enter selectors
+    ]
+  },
+  dek: {
+    selectors: [// enter selectors
+    ]
+  },
+  lead_image_url: {
+    selectors: [// enter selectors
+    ]
+  },
+  content: {
+    selectors: [// enter content selectors
+    ],
+    // Is there anything in the content you selected that needs transformed
+    // before it's consumable content? E.g., unusual lazy loaded images
+    transforms: {},
+    // Is there anything that is in the result that shouldn't be?
+    // The clean selectors will remove anything that matches from
+    // the result
+    clean: []
+  }
+};
+
 
 
 var CustomExtractors = /*#__PURE__*/Object.freeze({
@@ -6113,7 +6148,8 @@ var CustomExtractors = /*#__PURE__*/Object.freeze({
   SubstackExtractor: SubstackExtractor,
   WwwTheinfatuationComExtractor: WwwTheinfatuationComExtractor,
   AeonCoExtractor: AeonCoExtractor,
-  WwwSeriouseatsComExtractor: WwwSeriouseatsComExtractor
+  WwwSeriouseatsComExtractor: WwwSeriouseatsComExtractor,
+  WwwVultureComExtractor: WwwVultureComExtractor
 });
 
 var Extractors = _Object$keys(CustomExtractors).reduce(function (acc, key) {
@@ -7520,7 +7556,8 @@ function select(opts) {
   function transformAndClean($node) {
     makeLinksAbsolute$$1($node, $, opts.url || '');
     cleanBySelectors($node, $, extractionOpts);
-    transformElements($node, $, extractionOpts);
+    transformElements($node, $, extractionOpts); // TODO: Add footnote transform
+
     return $node;
   }
 
